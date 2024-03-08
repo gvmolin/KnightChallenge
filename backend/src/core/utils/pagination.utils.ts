@@ -40,20 +40,14 @@ export class PaginationUtils<T>{
 }
 
 export function paginationParamsDto(params:IPaginationParams){
-    console.log(typeof params.page);
-    
-    console.log(parseInt(`${params.page}`));
-    
     if(
         Number.isNaN(parseInt(`${params.page}`))  || 
-        Number.isNaN(`${params.limit}`)
+        Number.isNaN(parseInt(`${params.limit}`))
     ) throw new BadGatewayException("Parametros incorretos");
 
     let obj = {
         page: 1, limit: 10
     }
-
-    
 
     Object.entries(params).forEach(([key, value])=>{
         if(key in queryParamsEnum) obj[key] = value;
