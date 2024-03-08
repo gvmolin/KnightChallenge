@@ -1,34 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { KnightsService } from './knights.service';
-import { CreateKnightDto } from './dto/create-knight.dto';
-import { UpdateKnightDto } from './dto/update-knight.dto';
+import { CreateUpdateKnightDto } from './dto/create-update-knight.dto';
+import { JoiPipe } from 'nestjs-joi';
+import { UUID } from 'crypto';
+import { IPaginationParams, paginationParamsDto } from 'src/core/utils/pagination.utils';
+
 
 @Controller('knights')
 export class KnightsController {
   constructor(private readonly knightsService: KnightsService) {}
 
-  @Post()
-  create(@Body() createKnightDto: CreateKnightDto) {
+  @Post("/create")
+  create(@Body(new JoiPipe({group: "CREATE"})) createKnightDto: CreateUpdateKnightDto) {
     return this.knightsService.create(createKnightDto);
   }
 
-  @Get()
-  findAll() {
-    return this.knightsService.findAll();
+  @Get("/get")
+  findAll(@Query() query:IPaginationParams) {
+    return this.knightsService.findAll(query);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.knightsService.findOne(+id);
+  @Get('/get/:id')
+  findOne(@Param('id') id: UUID) {
+    return this.knightsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateKnightDto: UpdateKnightDto) {
-    return this.knightsService.update(+id, updateKnightDto);
+  @Patch('/update/:id')
+  update(@Param('id') id: UUID, @Body(new JoiPipe({group: "UPDATE"})) updateKnightDto: CreateUpdateKnightDto) {
+    return this.knightsService.update(id, updateKnightDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.knightsService.remove(+id);
+  @Delete('/delete/:id')
+  remove(@Param('id') id: UUID) {
+    return this.knightsService.remove(id);
   }
 }

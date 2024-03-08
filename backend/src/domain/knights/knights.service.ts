@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { CreateKnightDto } from './dto/create-knight.dto';
-import { UpdateKnightDto } from './dto/update-knight.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { CreateUpdateKnightDto } from './dto/create-update-knight.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, UpdateWriteOpResult } from 'mongoose';
 import { Knight } from './schemas/knight.schema';
+import { UUID } from 'crypto';
+import { DefaultResponseDto } from 'src/core/utils/default-response.dto';
+import { IPaginationParams, PaginationUtils, paginationParamsDto } from 'src/core/utils/pagination.utils';
 
 @Injectable()
 export class KnightsService {
@@ -13,23 +15,97 @@ export class KnightsService {
     private model:Model<Knight>
     
   ) { }
-  create(createKnightDto: CreateKnightDto) {
-    return 'This action adds a new knight';
+  async create(createKnightDto: CreateUpdateKnightDto): Promise<DefaultResponseDto<Knight>> {
+    const response = new DefaultResponseDto<Knight>();
+
+    try {
+      const created = await this.model.create(createKnightDto);
+      response.setData(created);
+      response.addMessage("Knight created successfully", true);
+    } catch (error) {
+      response.setData(error);
+      response.addMessage("Failure creating knight", false);
+      console.error(error);
+    }
+    
+    return response;
   }
 
-  findAll() {
-    return `This action returns all knights`;
+  async findAll(query: IPaginationParams = {limit:10, page:1}) {
+    const response = new DefaultResponseDto<{pagination: IPaginationParams, result:Knight[]}>();
+
+    try {
+      const paginator = new PaginationUtils(this.model);
+      const result = await paginator.paginate(paginationParamsDto(query));
+
+      response.addMessage(!!result.result.length ? "Found some knights" : "Didnt found any knight", true);
+      response.setData(result);
+      
+    } catch (error) {
+      response.setData(error);
+      response.addMessage("Failed getting all knights", false);
+      console.error(error);
+    }
+    
+    return response;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} knight`;
+  async findOne(id: UUID) {
+    const response = new DefaultResponseDto<Knight>();
+
+    try {
+      const found = await this.model.findById(id);
+      if(!found) throw new BadRequestException("Invalid knight id");   
+      response.setData(found);
+      response.addMessage("Knight found", true);
+    } catch (error) {
+      response.setData(error);
+      response.addMessage("Invalid knight", false);
+      console.error(error);
+    }
+    
+    return this.model.findById(id)
   }
 
-  update(id: number, updateKnightDto: UpdateKnightDto) {
-    return `This action updates a #${id} knight`;
+  async update(id: UUID, updateKnightDto: CreateUpdateKnightDto) {
+    const response = new DefaultResponseDto<UpdateWriteOpResult>();
+    try {
+      const found = await this.model.findById(id);
+      if(!found) throw new BadRequestException("Invalid knight id");   
+      const updated = await this.model.updateOne(
+        {_id: id}, 
+        {$set: {...updateKnightDto}}, 
+        {runValidators: true}
+      );      
+
+      response.setData(updated);
+      response.addMessage("Knight updated successfully", true);
+    } catch (error) {
+      response.setData(error);
+      response.addMessage("Failure updating knight", false);
+      console.error(error);
+    }
+    
+    return response;
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} knight`;
+  async remove(id: UUID) {
+    const response =  new DefaultResponseDto();
+
+    try {
+      const found = await this.model.findById(id);
+      if(!found) throw new BadRequestException("Invalid knight id");
+
+      const removed = await this.model.deleteOne({_id :id});
+      response.setData(removed);
+      response.addMessage("Knight removed successfully", true);
+      
+    } catch (error) {
+      response.setData(error);
+      response.addMessage("Failure removing knight", false);
+      console.error(error);
+    }
+    return response;
   }
 }
