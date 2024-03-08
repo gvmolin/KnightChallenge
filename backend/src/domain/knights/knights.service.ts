@@ -6,19 +6,24 @@ import { Knight } from './schemas/knight.schema';
 import { UUID } from 'crypto';
 import { DefaultResponseDto } from 'src/core/utils/default-response.dto';
 import { IPaginationParams, PaginationUtils, paginationParamsDto } from 'src/core/utils/pagination.utils';
+import { WeaponsInterface } from '../weapons/weapons.interface';
 
 @Injectable()
 export class KnightsService {
 
   constructor(
     @InjectModel('Knight') 
-    private model:Model<Knight>
+    private model:Model<Knight>,
+    private weaponsInterface: WeaponsInterface
     
   ) { }
   async create(createKnightDto: CreateUpdateKnightDto): Promise<DefaultResponseDto<Knight>> {
     const response = new DefaultResponseDto<Knight>();
 
     try {
+      const validateWeapons = await this.weaponsInterface.validateWeapons(createKnightDto.weapons);
+      if(!validateWeapons[0]) throw new BadRequestException("Invalid weapon list");
+
       const created = await this.model.create(createKnightDto);
       response.setData(created);
       response.addMessage("Knight created successfully", true);
