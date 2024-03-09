@@ -1,0 +1,30 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Ojuju:wght@200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ojuju:wght@200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+:root {
+    /* --color0: #1a1e1e;
+    --color1: #607274;
+    --color2: #B2A59B;
+    --color3: #DED0B6;
+    --color4: #FAEED1;
+    --color5: #ffffff; */
+
+    /* --color0: #000000;
+    --color1: #0B60B0;
+    --color2: #40A2D8;
+    --color3: #50727B;
+    --color4: #F0EDCF;
+    --color5: #ffffff; */
+
+    --color0: #191c2e;    
+    --color1: #2D3250;
+    --color2: #424769;
+    --color3: #7077A1;
+    --color4: #F6B17A;
+    --color5: #ffffff;
+
+    --default-padding: 2vh;
+    --default-radius:1vh;
+    --default-shadow: 4px 4px 13px -3px rgba(0,0,0,0.75);
+
+}
