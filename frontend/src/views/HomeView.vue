@@ -1,18 +1,29 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
-  </div>
+  <div class="knights-container">
+    <div style="background-color: antiquewhite; height: 100%; width: 100%;"></div>
+    <div style="background-color: antiquewhite; height: 100%; width: 100%;"></div>
+    <div style="background-color: antiquewhite; height: 100%; width: 100%;"></div>
+    <div style="background-color: antiquewhite; height: 100%; width: 100%;"></div>
+    <div style="background-color: antiquewhite; height: 100%; width: 100%;"></div>
+    <div style="background-color: antiquewhite; height: 100%; width: 100%;"></div>
+    <div style="background-color: antiquewhite; height: 100%; width: 100%;"></div>
+    <div style="background-color: antiquewhite; height: 100%; width: 100%;"></div>
+  </div>  
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+<script lang="ts" setup>
+import KnightCard from '@/components/KnightCard.vue';
 
-export default defineComponent({
-  name: "HomeView",
-  components: {
-    HelloWorld,
-  },
-});
 </script>
+
+<style>
+  .knights-container {
+    width: 100%;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    row-gap: 1vh;
+    column-gap: 1vh;
+  }
+</style>
