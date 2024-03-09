@@ -40,6 +40,7 @@ export class PaginationUtils<T>{
 }
 
 export function paginationParamsDto(params:IPaginationParams){
+    if(isObjectEmpty(params)) params = {limit:10, page:1};
     if(
         Number.isNaN(parseInt(`${params.page}`))  || 
         Number.isNaN(parseInt(`${params.limit}`))
@@ -58,3 +59,7 @@ export function paginationParamsDto(params:IPaginationParams){
     return obj;
 
 }
+
+function isObjectEmpty(obj: Record<string, any>): boolean {
+    return Object.entries(obj).length === 0;
+  }
