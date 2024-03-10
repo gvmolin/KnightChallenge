@@ -34,9 +34,9 @@ export class CreateUpdateKnightDto{
     }).optional())
     attributes: IAttribute;
 
-    @JoiSchema(['CREATE'], Joi.string().required())
-    @JoiSchema(['UPDATE'], Joi.string().optional())
-    birthday: string;
+    @JoiSchema(['CREATE'], Joi.date().required())
+    @JoiSchema(['UPDATE'], Joi.date().optional())
+    birthday: Date;
 
     @JoiSchema(['CREATE'], Joi.string().required())
     @JoiSchema(['UPDATE'], Joi.string().optional())
@@ -45,4 +45,8 @@ export class CreateUpdateKnightDto{
     @JoiSchema(['CREATE'], Joi.array().required())
     @JoiSchema(['UPDATE'], Joi.array().optional())
     weapons: Weapon[];
+
+    @JoiSchema(['CREATE'], Joi.object().optional())
+    @JoiSchema(['UPDATE'], Joi.object().optional())
+    equipped: Weapon;
 }

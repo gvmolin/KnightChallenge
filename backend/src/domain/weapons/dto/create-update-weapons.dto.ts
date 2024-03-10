@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import * as Joi from "joi";
 import { JoiSchema, JoiSchemaOptions } from "nestjs-joi";
 import { attributesEnum, getAttributesArray } from "src/core/utils/attributes.utils";

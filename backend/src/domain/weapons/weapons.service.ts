@@ -26,7 +26,7 @@ export class WeaponsService {
       response.addMessage("Weapon created successfully", true);
     } catch (error) {
       response.setData(error);
-      response.addMessage("Failure creating knight", false);
+      response.addMessage("Failure creating weapon", false);
       console.error(error);
     }
     
@@ -35,17 +35,17 @@ export class WeaponsService {
 
   async findAll(query: IPaginationParams = {limit:10, page:1}) {
     const response = new DefaultResponseDto<{pagination: IPaginationParams, result:Weapon[]}>();
-
+    
     try {
       const paginator = new PaginationUtils(this.model);
       const result = await paginator.paginate(paginationParamsDto(query));
       
-      response.addMessage(!!result.result.length ? "Found some knights" : "Didnt found any knight", true);
+      response.addMessage(!!result.result.length ? "Found some weapons" : "Didnt found any weapon", true);
       response.setData(result);
       
     } catch (error) {
       response.setData(error);
-      response.addMessage("Failed getting all knights", false);
+      response.addMessage("Failed getting all weapons", false);
       console.error(error);
     }
     
@@ -57,12 +57,12 @@ export class WeaponsService {
 
     try {
       const found = await this.model.findById(id);
-      if(!found) throw new BadRequestException("Invalid knight id");   
+      if(!found) throw new BadRequestException("Invalid weapon id");   
       response.setData(found);
       response.addMessage("Weapon found", true);
     } catch (error) {
       response.setData(error);
-      response.addMessage("Invalid knight", false);
+      response.addMessage("Invalid weapon", false);
       console.error(error);
     }
     
@@ -73,7 +73,7 @@ export class WeaponsService {
     const response = new DefaultResponseDto<UpdateWriteOpResult>();
     try {
       const found = await this.model.findById(id);
-      if(!found) throw new BadRequestException("Invalid knight id");   
+      if(!found) throw new BadRequestException("Invalid weapon id");   
       const updated = await this.model.updateOne(
         {_id: id}, 
         {$set: {...updateWeaponDto}}, 
@@ -84,7 +84,7 @@ export class WeaponsService {
       response.addMessage("Weapon updated successfully", true);
     } catch (error) {
       response.setData(error);
-      response.addMessage("Failure updating knight", false);
+      response.addMessage("Failure updating weapon", false);
       console.error(error);
     }
     
@@ -97,7 +97,7 @@ export class WeaponsService {
 
     try {
       const found = await this.model.findById(id);
-      if(!found) throw new BadRequestException("Invalid knight id");
+      if(!found) throw new BadRequestException("Invalid weapon id");
 
       const removed = await this.model.deleteOne({_id :id});
       response.setData(removed);
@@ -105,7 +105,7 @@ export class WeaponsService {
       
     } catch (error) {
       response.setData(error);
-      response.addMessage("Failure removing knight", false);
+      response.addMessage("Failure removing weapon", false);
       console.error(error);
     }
     return response;
