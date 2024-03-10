@@ -7,6 +7,7 @@ import { UUID } from 'crypto';
 import { DefaultResponseDto } from 'src/core/utils/default-response.dto';
 import { IPaginationParams, PaginationUtils, paginationParamsDto } from 'src/core/utils/pagination.utils';
 import { WeaponsInterface } from '../weapons/weapons.interface';
+import { KnightsUtils } from './knights.utils';
 
 @Injectable()
 export class KnightsService {
@@ -14,17 +15,23 @@ export class KnightsService {
   constructor(
     @InjectModel('Knight') 
     private model:Model<Knight>,
-    private weaponsInterface: WeaponsInterface
+    private weaponsInterface: WeaponsInterface,
+    private utils: KnightsUtils
     
   ) { }
   async create(createKnightDto: CreateUpdateKnightDto): Promise<DefaultResponseDto<Knight>> {
     const response = new DefaultResponseDto<Knight>();
 
     try {
+      //validation
+      this.utils.validateKnight(createKnightDto);
       const validateWeapons = await this.weaponsInterface.validateWeapons(createKnightDto.weapons);
       if(!validateWeapons[0]) throw new BadRequestException("Invalid weapon list");
 
-      const created = await this.model.create(createKnightDto);
+      //rules
+      const build = this.utils.buildStatus(createKnightDto);
+
+      const created = await this.model.create(build);
       response.setData(created);
       response.addMessage("Knight created successfully", true);
     } catch (error) {
@@ -41,6 +48,9 @@ export class KnightsService {
 
     try {
       const paginator = new PaginationUtils(this.model);
+
+      query.populate = ["weapons", "equipped"];
+
       const result = await paginator.paginate(paginationParamsDto(query));
 
       response.addMessage(!!result.result.length ? "Found some knights" : "Didnt found any knight", true);
@@ -113,4 +123,5 @@ export class KnightsService {
     }
     return response;
   }
+
 }
