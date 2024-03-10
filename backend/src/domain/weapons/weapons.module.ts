@@ -6,7 +6,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { WeaponsInterface } from './weapons.interface';
 
 @Module({
-  imports: [ MongooseModule.forFeature([{ name: 'Weapon', schema: WeaponSchema } ]) ],
+  imports: [ MongooseModule.forFeatureAsync([{ 
+    name: 'Weapon', 
+    useFactory: () => {
+      const schema = WeaponSchema;
+      schema.plugin(require('mongoose-unique-validator'), { message: 'Unique validation error on weapons schema' })
+      return schema;
+    }
+    // schema: WeaponSchema 
+    
+  } ]) ],
   controllers: [WeaponsController],
   providers: [WeaponsService, WeaponsInterface],
   exports: [WeaponsInterface]
