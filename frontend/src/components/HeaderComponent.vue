@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref,} from "vue";
 import MenuIcon from 'vue-material-design-icons/Menu.vue';
 import ChessKnightIcon from 'vue-material-design-icons/ChessKnight.vue';
 import CloseIcon from 'vue-material-design-icons/Close.vue';
@@ -71,9 +71,7 @@ const delayedTrigger = ref<boolean>();
 const menuStore = useMenuStore();
 
 onMounted(()=>{
-    isOpen.value = menuStore.isActive;
-    console.log(isOpen.value);
-    
+    isOpen.value = menuStore.isActive;    
 })
 
 menuStore.$onAction(({name, store, args})=> {

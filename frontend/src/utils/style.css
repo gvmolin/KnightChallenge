@@ -4,7 +4,7 @@
 :root {
     /* --color0: #1a1e1e;
     --color1: #607274;
-    --color2: #B2A59B;
+    --color2: #dcc7b7;
     --color3: #DED0B6;
     --color4: #FAEED1;
     --color5: #ffffff; */
@@ -22,9 +22,14 @@
     --color3: #7077A1;
     --color4: #F6B17A;
     --color5: #ffffff;
+    --color6: antiquewhite;
+
+    --color-danger: rgb(243, 87, 87);
 
     --default-padding: 2vh;
     --default-radius:1vh;
     --default-shadow: 4px 4px 13px -3px rgba(0,0,0,0.75);
 
+    --scrollbar-width: 5px;
 }
+
