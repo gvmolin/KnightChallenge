@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateWriteOpResult } from 'mongoose';
 import { Knight } from './schemas/knight.schema';
 import { UUID } from 'crypto';
-import { DefaultResponseDto } from 'src/core/utils/default-response.dto';
+import { DefaultResponse } from 'src/core/utils/default-response.utils';
 import { IPaginationParams, PaginationUtils, paginationParamsDto } from 'src/core/utils/pagination.utils';
 import { WeaponsInterface } from '../weapons/weapons.interface';
 import { KnightsUtils } from './knights.utils';
@@ -19,18 +19,19 @@ export class KnightsService {
     private utils: KnightsUtils
     
   ) { }
-  async create(createKnightDto: CreateUpdateKnightDto): Promise<DefaultResponseDto<Knight>> {
-    const response = new DefaultResponseDto<Knight>();
+  async create(createKnightDto: CreateUpdateKnightDto): Promise<DefaultResponse<Knight>> {
+    const response = new DefaultResponse<Knight>();
 
     try {
       //validation
       this.utils.validateKnight(createKnightDto);
-      const validateWeapons = await this.weaponsInterface.validateWeapons(createKnightDto.weapons);
-      if(!validateWeapons[0]) throw new BadRequestException("Invalid weapon list");
-
+      await this.weaponsInterface.validateWeapons(createKnightDto.weapons);
+      const equipped = await this.weaponsInterface.validateEquipped(createKnightDto);
+      
       //rules
-      const build = this.utils.buildStatus(createKnightDto);
+      const build = this.utils.buildStatus(createKnightDto, equipped);
 
+      
       const created = await this.model.create(build);
       response.setData(created);
       response.addMessage("Knight created successfully", true);
@@ -44,7 +45,7 @@ export class KnightsService {
   }
 
   async findAll(query: IPaginationParams = {limit:10, page:1}) {
-    const response = new DefaultResponseDto<{pagination: IPaginationParams, result:Knight[]}>();
+    const response = new DefaultResponse<{pagination: IPaginationParams, result:Knight[]}>();
 
     try {
       const paginator = new PaginationUtils(this.model);
@@ -66,7 +67,7 @@ export class KnightsService {
   }
 
   async findOne(id: UUID) {
-    const response = new DefaultResponseDto<Knight>();
+    const response = new DefaultResponse<Knight>();
 
     try {
       const found = await this.model.findById(id);
@@ -83,7 +84,7 @@ export class KnightsService {
   }
 
   async update(id: UUID, updateKnightDto: CreateUpdateKnightDto) {
-    const response = new DefaultResponseDto<UpdateWriteOpResult>();
+    const response = new DefaultResponse<UpdateWriteOpResult>();
     try {
       const found = await this.model.findById(id);
       if(!found) throw new BadRequestException("Invalid knight id");   
@@ -106,15 +107,15 @@ export class KnightsService {
   }
 
   async remove(id: UUID) {
-    const response =  new DefaultResponseDto();
+    const response =  new DefaultResponse();
 
     try {
       const found = await this.model.findById(id);
       if(!found) throw new BadRequestException("Invalid knight id");
 
-      const removed = await this.model.deleteOne({_id :id});
+      const removed = await this.model.updateOne({_id :id}, {deleted:true});
       response.setData(removed);
-      response.addMessage("Knight removed successfully", true);
+      response.addMessage("Knight removed, transformed into a hero successfully", true);
       
     } catch (error) {
       response.setData(error);
