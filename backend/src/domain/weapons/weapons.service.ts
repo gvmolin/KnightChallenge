@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateWriteOpResult } from 'mongoose';
 import { Weapon } from './schemas/weapons.schema';
 import { UUID } from 'crypto';
-import { DefaultResponseDto } from 'src/core/utils/default-response.dto';
+import { DefaultResponse } from 'src/core/utils/default-response.utils';
 import { IPaginationParams, PaginationUtils, paginationParamsDto } from 'src/core/utils/pagination.utils';
 import { WeaponsInterface } from './weapons.interface';
 
@@ -17,8 +17,8 @@ export class WeaponsService {
     // private weaponsModel: WeaponsModel
     
   ) { }
-  async create(createWeaponDto: CreateUpdateWeaponDto): Promise<DefaultResponseDto<Weapon>> {
-    const response = new DefaultResponseDto<Weapon>();
+  async create(createWeaponDto: CreateUpdateWeaponDto): Promise<DefaultResponse<Weapon>> {
+    const response = new DefaultResponse<Weapon>();
 
     try {
       const created = await this.model.create(createWeaponDto);
@@ -34,7 +34,7 @@ export class WeaponsService {
   }
 
   async findAll(query: IPaginationParams = {limit:10, page:1}) {
-    const response = new DefaultResponseDto<{pagination: IPaginationParams, result:Weapon[]}>();
+    const response = new DefaultResponse<{pagination: IPaginationParams, result:Weapon[]}>();
     
     try {
       const paginator = new PaginationUtils(this.model);
@@ -53,7 +53,7 @@ export class WeaponsService {
   }
 
   async findOne(id: UUID) {
-    const response = new DefaultResponseDto<Weapon>();
+    const response = new DefaultResponse<Weapon>();
 
     try {
       const found = await this.model.findById(id);
@@ -70,7 +70,7 @@ export class WeaponsService {
   }
 
   async update(id: UUID, updateWeaponDto: CreateUpdateWeaponDto) {
-    const response = new DefaultResponseDto<UpdateWriteOpResult>();
+    const response = new DefaultResponse<UpdateWriteOpResult>();
     try {
       const found = await this.model.findById(id);
       if(!found) throw new BadRequestException("Invalid weapon id");   
@@ -93,7 +93,7 @@ export class WeaponsService {
   }
 
   async remove(id: UUID) {
-    const response =  new DefaultResponseDto();
+    const response =  new DefaultResponse();
 
     try {
       const found = await this.model.findById(id);

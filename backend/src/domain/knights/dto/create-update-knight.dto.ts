@@ -1,8 +1,9 @@
 export class CreateKnightDto {}
 import * as Joi from "joi";
 import { JoiSchema, JoiSchemaOptions } from "nestjs-joi";
-import { IAttribute } from "src/core/utils/attributes.utils";
+import { IAttribute, attributesEnum, getAttributesArray } from "src/core/utils/attributes.utils";
 import { Weapon } from "src/domain/weapons/schemas/weapons.schema";
+const validAttr = getAttributesArray();
 
 
 @JoiSchemaOptions({ allowUnknown: false })
@@ -38,9 +39,10 @@ export class CreateUpdateKnightDto{
     @JoiSchema(['UPDATE'], Joi.date().optional())
     birthday: Date;
 
-    @JoiSchema(['CREATE'], Joi.string().required())
-    @JoiSchema(['UPDATE'], Joi.string().optional())
-    keyAttribute: string;
+
+    @JoiSchema(['CREATE'], Joi.string().valid(...validAttr).required())
+    @JoiSchema(['UPDATE'], Joi.string().valid(...validAttr).optional())
+    keyAttribute: attributesEnum;
     
     @JoiSchema(['CREATE'], Joi.array().required())
     @JoiSchema(['UPDATE'], Joi.array().optional())

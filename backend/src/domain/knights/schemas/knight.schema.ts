@@ -1,25 +1,26 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
 import { UUID } from "crypto";
 import { SchemaTypes } from "mongoose";
+import { BaseSchema } from "src/core/base/base-schema";
 import { IAttribute, attributesEnum } from "src/core/utils/attributes.utils";
 import { Weapon } from "src/domain/weapons/schemas/weapons.schema";
 
 @Schema()
-export class Knight {
+export class Knight extends BaseSchema {
    @Prop({required: true, unique: true, maxlength: 15})
    name: string;
 
    @Prop({maxlength: 15})
    nickname: string;
 
-   @Prop({type: Object})
+   @Prop({type: Object, required: true})
    attributes: IAttribute;
 
-   @Prop({type: Date})
+   @Prop({type: Date, required: true})
    birthday: string;
 
-   @Prop()
-   keyAtributte: attributesEnum;
+   @Prop({required: true})
+   keyAttribute: string;
 
    @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Weapon' }] })
    weapons: Weapon[];
