@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="knights-container">
-      <knight-card v-for="knight in knights" :knight="knight"></knight-card>
-      <controls-card :pagination="pagination" @onCreate="handleCreate" />
+      <knight-card v-for="knight in knights" :knight="knight" @onEdit="handleEdit" @onDelete="handleDelete" :disableEdit="true" :disableDelete="true"></knight-card>
+      <controls-card :pagination="pagination" @onCreate="handleCreate" @onPaginationChange="handleChangePagination" :disableAdd="true" />
 
 
 
@@ -22,7 +22,7 @@
         <div class="modal-field modal-space-between">
           <div style="width: 49%; display: flex; flex-direction: column; align-items: flex-start;">
             <h3>Birthday</h3>
-            <input type="date" v-model="form.birthday" />
+            <input type="date" v-model="form.birthday" min="1900-06-01T08:30"/>
           </div>
 
           <div style="width: 49%; display: flex; flex-direction: column; align-items: flex-start;">
@@ -91,7 +91,6 @@
       </div>
     </modal-component>
 
-
   </div>
 
 </template>
@@ -108,8 +107,10 @@ import { getAttributesArray } from '@/utils/types/attributes';
 import { IWeapon } from '@/utils/types/weapons';
 import PlusIcon from 'vue-material-design-icons/Plus.vue';
 import MinusIcon from 'vue-material-design-icons/Minus.vue';
+import { useLoading } from 'vue-loading-overlay';
 
 const INITIAL_FORM:IKnight = {
+    _id:"",
     name:"",
     nickname:"",
     weapons: [],
@@ -122,7 +123,7 @@ const INITIAL_FORM:IKnight = {
       charisma: 0, 
     },
     birthday: "",
-    equipped: null,
+    equipped: {},
     keyAttribute: ""
 }
 
@@ -133,6 +134,7 @@ const currentOp = ref<"Create"|"Edit">("Create");
 const weapons = ref<IWeapon[]>([]);
 const currentWeapon = ref<IWeapon>();
 const form = ref<IKnight>({...INITIAL_FORM});
+const loader = useLoading();
 
 
 
@@ -141,17 +143,25 @@ onMounted(async()=>{
     await getWeapons();
 })
 
-watch(()=> currentWeapon.value, ()=> {
-  console.log(currentWeapon.value);
+watch(()=> isModalVisible.value, ()=> {
+  const body = document.querySelector("body");
+  if(isModalVisible.value){
+    if(body) body.style.overflowY = "hidden";
+    window.scrollTo(0,0)
+  } else {
+    if(body) body.style.overflowY = "auto";
+  }
+  
   
 })
 
 async function getKnights(){
-  await axiosInstance.get("/knights/get?limit=9&page=1")
+  const showing = loader.show();
+  await axiosInstance.get(`/knights/get?limit=${pagination.value.limit}&page=${pagination.value.page}&filter=heroes`)
     .then(res => {
       knights.value = res.data.data.result;
       pagination.value = res.data.data.pagination;
-      
+      showing.hide();
     });  
 }
 
@@ -159,7 +169,6 @@ async function getWeapons(){
   await axiosInstance.get("/weapons/get?limit=99999&page=1")
     .then(res => {      
       weapons.value = res.data.data.result;
-      pagination.value = res.data.data.pagination;
       
     });  
 }
@@ -173,6 +182,18 @@ function handleClose(){
   form.value = {...INITIAL_FORM};
 }
 
+function handleEdit(body: IKnight){
+  form.value = {...body};
+  currentOp.value = "Edit";
+  isModalVisible.value = true;
+  form.value.birthday = formatDateYYYYmmdd(form.value.birthday);  
+  setTimeout(()=> {
+    form.value.equipped = {...body.equipped[0]};
+      
+  }, 100)
+  
+}
+
 function capitalizeFirstLetter(str:string) {
   if (typeof str !== 'string') {
     throw new Error('Input must be a string');
@@ -181,36 +202,89 @@ function capitalizeFirstLetter(str:string) {
 }
 
 async function handleSubmit(){
+  const showing = loader.show();
   const dto = createUpdateDto();
-  
-  await axiosInstance.post("/knights/create", dto)
+  if(currentOp.value === "Create"){
+    await axiosInstance.post("/knights/create", dto)
     .then(async (res) => {
-      await getKnights();
-      handleClose();
+      alert(res.data.messages[0].message)
+
+      if(res.data.messages[0].success){
+        await getKnights();
+        handleClose();
+        showing.hide();
+      }
       
+    })
+    .catch(err => {
+      alert(err.message);
+      console.log(err);
       
     });  
+
+  } else if (currentOp.value === "Edit" && form.value._id) {    
+    await axiosInstance.patch("/knights/update/"+ form.value._id, dto)
+    .then(async (res) => {
+      if(res.data.messages){
+        alert(res.data.messages[0].message)
+
+        if(res.data.messages[0].success){
+          await getKnights();
+          handleClose();
+          showing.hide();
+        }
+      }
+    })
+    .catch(err => {
+      alert(err.message);
+      console.log(err);
+      
+    });  
+    
+  }
+}
+
+async function handleDelete(id:string){
+  const showing = loader.show();
+  await axiosInstance.delete("/knights/delete/"+ id)
+    .then(async (res) => {
+      if(res.data.messages){
+        alert(res.data.messages[0].message)
+
+        if(res.data.messages[0].success){
+          await getKnights();
+          showing.hide();
+        }
+      }
+    })
 }
 
 
 function createUpdateDto():IKnight{
-  const date = new Date(form.value.birthday);
+  const date = new Date(form.value.birthday)
 
   return {
     name:form.value.name,
     nickname:form.value.nickname,
     weapons: form.value.weapons,
     attributes: form.value.attributes,
-    birthday: `${date.getDate() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`,
+    birthday: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`,
     equipped: form.value.equipped,
     keyAttribute: form.value.keyAttribute
 
   }
 }
 
-function formatDate(input: string|Date) {
-    const date = new Date(input);
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+function formatDateYYYYmmdd(input: string|Date) {
+    const date = new Date(input);        
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() + 1}`;
+}
+
+
+async function handleChangePagination(pag:IPagination){
+  pagination.value = pag;
+  await getKnights()
+  
 }
 
 </script>
@@ -218,9 +292,11 @@ function formatDate(input: string|Date) {
 <style scoped>
   .knights-container {
     width: 100%;
-    max-height: 100vh;
+    height: fit-content;
+    min-height: 99vh;
+    /* height: 99vh; */
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     row-gap: 1vh;
     column-gap: 1vh;
