@@ -1,5 +1,7 @@
 import { BadRequestException } from "@nestjs/common";
 import { CreateUpdateKnightDto } from "./dto/create-update-knight.dto";
+import { parseMod } from "src/core/utils/attributes.utils";
+import { Weapon } from "../weapons/schemas/weapons.schema";
 
 export class KnightsUtils {
     constructor(){
@@ -11,10 +13,11 @@ export class KnightsUtils {
         
       }
     
-      buildStatus(knight: CreateUpdateKnightDto) {
+      buildStatus(knight: CreateUpdateKnightDto, equipped:Weapon) {
         const age = this.getAge(knight.birthday);
         const experience = Math.floor((age - 7) * Math.pow(22, 1.45));
-        const attack = 10 //attack = 10 + mod(keyAttr) + equippedWeapon.mod 
+        const attack = 10 + (parseMod(knight.attributes[knight.keyAttribute])) + equipped.mod;
+        
         return {
             ...knight,
             experience,
