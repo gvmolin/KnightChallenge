@@ -18,6 +18,33 @@
   /* font-family: "Open Sans", sans-serif; */
   /* font-family: "Ojuju", sans-serif; */
   font-family: "Montserrat", sans-serif;
+
+  
+}
+
+button:hover{
+  cursor: pointer;
+
+}
+
+        /* width */
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--color5);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--color3);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 #app {
