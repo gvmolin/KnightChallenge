@@ -1,4 +1,4 @@
-export class DefaultResponseDto<T> {
+export class DefaultResponse<T> {
 
     private data?: T;
     private messages = [];
