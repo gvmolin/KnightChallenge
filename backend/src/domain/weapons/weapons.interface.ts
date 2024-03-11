@@ -43,7 +43,6 @@ export class WeaponsInterface {
     async validateEquipped(knight: CreateUpdateKnightDto): Promise<Weapon>{   
         const id = knight.equipped._id;    
         const result = await this.model.findById(id.toString());
-        console.log(result);
         
         if(!result) throw new NotFoundException("Invalid equipped item!");
 

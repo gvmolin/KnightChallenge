@@ -6,7 +6,6 @@ import { Weapon } from './schemas/weapons.schema';
 import { UUID } from 'crypto';
 import { DefaultResponse } from 'src/core/utils/default-response.utils';
 import { IPaginationParams, PaginationUtils, paginationParamsDto } from 'src/core/utils/pagination.utils';
-import { WeaponsInterface } from './weapons.interface';
 
 @Injectable()
 export class WeaponsService {
@@ -38,7 +37,7 @@ export class WeaponsService {
     
     try {
       const paginator = new PaginationUtils(this.model);
-      const result = await paginator.paginate(paginationParamsDto(query));
+      const result = await paginator.paginate(paginationParamsDto(query));      
       
       response.addMessage(!!result.result.length ? "Found some weapons" : "Didnt found any weapon", true);
       response.setData(result);

@@ -88,9 +88,17 @@ export class KnightsService {
     try {
       const found = await this.model.findById(id);
       if(!found) throw new BadRequestException("Invalid knight id");   
+      //validation
+      this.utils.validateKnight(updateKnightDto);
+      await this.weaponsInterface.validateWeapons(updateKnightDto.weapons);
+      const equipped = await this.weaponsInterface.validateEquipped(updateKnightDto);
+      
+      //rules
+      const build = this.utils.buildStatus(updateKnightDto, equipped);
+
       const updated = await this.model.updateOne(
         {_id: id}, 
-        {$set: {...updateKnightDto}}, 
+        {$set: {...build}}, 
         {runValidators: true}
       );      
 

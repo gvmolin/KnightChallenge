@@ -10,7 +10,6 @@ async function bootstrap() {
   app.enableCors({
     origin: process.env.CORS_WHITELIST.split(",")
   });
-
   await app.listen(process.env.APP_PORT);
   console.log("-------> Aplicação rodando na porta " + process.env.APP_PORT);
   
