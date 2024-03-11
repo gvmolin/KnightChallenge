@@ -1,8 +1,7 @@
-import { attributesEnum } from "./attributes";
 
 export interface IWeapon{
-    _id:string
+    _id?:string
     name: string;
-    keyAttribute: attributesEnum;
+    keyAttribute: string;
     mod: number;
 }

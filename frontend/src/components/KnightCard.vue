@@ -4,13 +4,15 @@
             <button class="view-button" @click="isDetailed = true">
                 <EyeIcon />
             </button>
-            <button class="delete-button">
+            <button v-if="!props.disableDelete" class="delete-button" @click="emits('onDelete', props.knight._id)">
                 <TrashCanIcon />
             </button>
         </div>
         <hr>
         <div class="knight-info" :style="isDetailed ? 'filter: blur(6px)' : ''">
-            <div class="knight-img"></div>
+            <div class="knight-img">
+                <img src="../../public/images/knight-icon.png" alt="">
+            </div>
             <div class="knight-card-info"><h2>Name: &nbsp;</h2> <h2>{{ props.knight.name }}</h2></div>
             <div class="knight-card-info"><h2>Nickname: &nbsp;</h2> <h2>{{ props.knight.nickname }}</h2></div>
             <!-- <div class="knight-card-info"><h2>Nickname:</h2> <h2>{{ props.knight.attributes }}</h2></div> -->
@@ -22,7 +24,7 @@
                     <EyeClosedIcon />
                 </button>
 
-                <button class="edit-button">
+                <button v-if="!props.disableEdit" class="edit-button" @click="emits('onEdit', knight)">
                     <PenIcon />
                 </button>
 
@@ -33,7 +35,7 @@
                 <div class="knight-card-info"><h2>Basics</h2></div>
                 <div class="knight-card-info"><h3>Name: &nbsp;</h3> <h3>{{ props.knight.name }}</h3></div>
                 <div class="knight-card-info"><h3>Nickname: &nbsp;</h3> <h3>{{ props.knight.nickname }}</h3></div>
-                <div class="knight-card-info"><h3>Birthday: &nbsp;</h3> <h3>{{ formatDate(props.knight.birthday) }}</h3></div>
+                <div class="knight-card-info"><h3>Birthday: &nbsp;</h3> <h3>{{ formatDateYYYYmmdd(props.knight.birthday) }}</h3></div>
                 <hr>
                 <div class="knight-card-info"><h2>Attributes</h2></div>
                 <div class="knight-card-info" v-for="[key, value] in Object.entries(props.knight.attributes)"><h3>{{key}}: &nbsp;</h3> <h3>{{ value }}</h3></div>
@@ -77,21 +79,24 @@
 
 <script setup lang="ts">
 import { IKnight } from '@/utils/types/knights';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import PenIcon from 'vue-material-design-icons/Pen.vue';
 import TrashCanIcon from 'vue-material-design-icons/TrashCan.vue';
 import EyeIcon from 'vue-material-design-icons/Eye.vue';
 import EyeClosedIcon from 'vue-material-design-icons/EyeClosed.vue';
 
 const props = defineProps<{
-    knight: IKnight
+    knight: IKnight,
+    disableEdit?: boolean,
+    disableDelete?:boolean
 }>();
 
+const emits = defineEmits(["onEdit", "onDelete"])
 const isDetailed = ref<boolean>(false);
 
-function formatDate(input: string) {
-    const date = new Date(input);
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+function formatDateYYYYmmdd(input: string|Date) {
+    const date = new Date(input);    
+    return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate() + 1}`
 }
 
 
@@ -153,6 +158,13 @@ function formatDate(input: string) {
         background-color: white;
         border-radius: var(--default-radius);
         margin-bottom: 1vh;
+    }
+
+    .knight-img img{
+        width: 30vh;
+        height: 30vh;
+        transform: scale(0.5);
+        opacity: 0.5;
     }
 
     .knight-info{

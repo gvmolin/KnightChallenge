@@ -14,17 +14,31 @@
 
         <nav>
             <button> 
-                <ChessKnightIcon/> 
-                <p :class="(isOpen && delayedTrigger) ? 'p-open' : 'p-closed'">
-                    Knights
-                </p> 
+                <router-link to="/" style="text-decoration: none; color: inherit;">
+                    <ChessKnightIcon/> 
+                    <p :class="(isOpen && delayedTrigger) ? 'p-open' : 'p-closed'">
+                        Knights
+                    </p> 
+                </router-link>
             </button>
 
             <button> 
-                <SwordIcon/> 
-                <p :class="(isOpen && delayedTrigger) ? 'p-open' : 'p-closed'">
-                    Weapons
-                </p> 
+                <router-link to="/weapons" style="text-decoration: none; color: inherit;">
+                    <SwordIcon/> 
+                    <p :class="(isOpen && delayedTrigger) ? 'p-open' : 'p-closed'">
+                        Weapons
+                    </p> 
+                </router-link>
+            </button>
+
+            
+            <button> 
+                <router-link to="/hall-of-fame" style="text-decoration: none; color: inherit;">
+                    <ChessKingIcon/> 
+                    <p :class="(isOpen && delayedTrigger) ? 'p-open' : 'p-closed'">
+                        Hall of fame
+                    </p> 
+                </router-link>
             </button>
 
             <button> 
@@ -65,6 +79,8 @@ import AccountCogIcon from 'vue-material-design-icons/AccountCog.vue';
 import SwordIcon from 'vue-material-design-icons/Sword.vue';
 import PlusNetworkIcon from 'vue-material-design-icons/PlusNetwork.vue'
 import { useMenuStore } from "@/store/menu-store";
+import ChessKingIcon from 'vue-material-design-icons/ChessKing.vue';
+ 
 
 const isOpen = ref<boolean>();
 const delayedTrigger = ref<boolean>();

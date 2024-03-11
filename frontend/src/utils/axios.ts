@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-export function mountDefaultPath(){
-    console.log(process.env.VUE_APP_BASE_URL);
-    
+export function mountDefaultPath(){    
     return sanitazeUrl(`${process.env.VUE_APP_BASE_URL}:${process.env.VUE_APP_BASE_PORT}/`);
 }
 

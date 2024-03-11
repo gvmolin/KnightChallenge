@@ -37,6 +37,7 @@ menuStore.$onAction(({name, store, args})=> {
         width: 100%;
         min-height: 100vh;
         height: fit-content;
+        overflow-y: auto;
     }
 
     .layout-slot-container{

@@ -39,12 +39,9 @@ const emits = defineEmits(["onClose", "onSubmit"])
 <style>
 .modal-container{
     background-color: rgba(25, 25, 25, 0.976);
-    /* filter:blur(25px); */
-
     width: 100vw;
-    height: 100vh;
-    overflow-y: hidden;
-    overflow-x: hidden;
+    min-height: 100vh;
+    height: max-content;
     position: absolute;
     top: 0;
     right: 0;

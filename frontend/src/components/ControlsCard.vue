@@ -1,7 +1,7 @@
 <template>
     <div class="knight-card-container controls-card" >
         <div class="card-row" style="margin-top: 0;">
-            <button @click="emits('onCreate')">
+            <button v-if="!props.disableAdd" @click="emits('onCreate')">
                 <PlusIcon />
             </button>
         </div>
@@ -10,7 +10,7 @@
 
             <div class="card-row">
                 <h3>Items per page:</h3>
-                <select :value="props.pagination.limit">
+                <select v-model="props.pagination.limit" @change="emits('onPaginationChange', {...props.pagination})">
                     <option value="9"> &nbsp; 9</option>
                     <option value="29">&nbsp; 29</option>
                     <option value="49">&nbsp; 49</option>
@@ -19,7 +19,7 @@
             </div>
 
             <div class="card-row">
-                <button :disabled="`${props.pagination.page}` === `1`">
+                <button :disabled="`${props.pagination.page}` === `1`" @click="emits('onPaginationChange', {...props.pagination, page: Number.parseInt(`${props.pagination.page}`) -1})">
                     <ArrowLeftIcon />
                 </button>
 
@@ -29,12 +29,13 @@
                     <p>{{ props.pagination.totalPages }}</p>
                 </div>
 
-                <button :disabled="`${props.pagination.page}` === `${props.pagination.totalPages}`">
+                <button :disabled="`${props.pagination.page}` === `${props.pagination.totalPages}`" @click="emits('onPaginationChange', {...props.pagination, page: Number.parseInt(`${props.pagination.page}`) + 1})">
                     <ArrowRightIcon />
                 </button>
             </div>
 
         </div>
+
 
     </div>
 </template>
@@ -43,19 +44,12 @@
 import PlusIcon from 'vue-material-design-icons/Plus.vue';
 import ArrowLeftIcon from 'vue-material-design-icons/ArrowLeft.vue';
 import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue';
-import { onMounted } from 'vue';
 
 const props = defineProps<{
-    pagination: {page:number, totalPages:number, limit:number}
+    pagination: {page:number, totalPages:number, limit:number},
+    disableAdd?: boolean
 }>();
-const emits = defineEmits(["onCreate"]);
-
-onMounted(()=> {
-    
-})
-
-
-
+const emits = defineEmits(["onCreate", "onPaginationChange"]);
 
 </script>
 
