@@ -110,3 +110,9 @@ Antes de começar, certifique-se de ter os seguintes itens instalados:
 - Personalize a aplicação de acordo com seus requisitos.
 
 Sinta-se à vontade para contribuir, relatar problemas ou fornecer feedback!
+
+## Lista "To-do"
+- Sessão de partida via websockets
+- Autenticaçao de usuário
+- Deploy
+- Visualização no "modo tabela tradicional"
