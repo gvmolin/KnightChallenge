@@ -1,5 +1,5 @@
 <template>
-    <div class="knight-card-container controls-card" >
+    <div class="card-container controls-card" >
         <div class="card-row" style="margin-top: 0;">
             <button v-if="!props.disableAdd" @click="emits('onCreate')">
                 <PlusIcon />
@@ -54,21 +54,7 @@ const emits = defineEmits(["onCreate", "onPaginationChange"]);
 </script>
 
 <style>
-.knight-card-container {
-    background-color: antiquewhite;
-    height: 100%;
-    width: 100%;
 
-
-    border-radius: var(--default-radius);
-    padding: 1vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    position: relative;
-    box-shadow: var(--default-shadow);
-}
 
 .search-container{
     width: 100%;
@@ -76,15 +62,6 @@ const emits = defineEmits(["onCreate", "onPaginationChange"]);
     padding-bottom: 1vh;
 }
 
-.controls-card input{
-    width: 80%;
-    border: none;
-    height: 3vw;
-    border-radius: var(--default-radius);
-    border: var(--color4) 1px solid;
-    
-    margin-right: 1vh;
-}
 
 .controls-card{
     display: flex;
@@ -119,10 +96,9 @@ const emits = defineEmits(["onCreate", "onPaginationChange"]);
 
 .controls-card select{
     width: 3vw;
-    border: none;
     height: 3vw;
     border-radius: var(--default-radius);
     
-    font-size: 1vw;
+    font-size: 0.8vw;
 }
 </style>

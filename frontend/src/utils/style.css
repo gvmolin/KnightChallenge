@@ -1,35 +1,78 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap'); */
 /* @import url('https://fonts.googleapis.com/css2?family=Ojuju:wght@200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap'); */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Ojuju:wght@200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
 :root {
-    /* --color0: #1a1e1e;
+	/* --color0: #1a1e1e;
     --color1: #607274;
     --color2: #dcc7b7;
     --color3: #DED0B6;
     --color4: #FAEED1;
     --color5: #ffffff; */
 
-    /* --color0: #000000;
+	/* --color0: #000000;
     --color1: #0B60B0;
     --color2: #40A2D8;
     --color3: #50727B;
     --color4: #F0EDCF;
     --color5: #ffffff; */
 
-    --color0: #191c2e;    
-    --color1: #2D3250;
-    --color2: #424769;
-    --color3: #7077A1;
-    --color4: #F6B17A;
-    --color5: #ffffff;
-    --color6: antiquewhite;
+	--color0: #191c2e;
+	--color1: #2D3250;
+	--color2: #424769;
+	--color3: #7077A1;
+	--color4: #F6B17A;
+	--color5: #ffffff;
+	--color6: antiquewhite;
 
-    --color-danger: rgb(243, 87, 87);
+	--border-gray: rgba(128, 128, 128, 0.351);
+	--color-danger: rgb(243, 87, 87);
+	--scrollbar-width: 5px;
 
-    --default-padding: 2vh;
-    --default-radius:1vh;
-    --default-shadow: 4px 4px 13px -3px rgba(0,0,0,0.75);
-
-    --scrollbar-width: 5px;
+	--default-padding: 2vh;
+	--default-radius: 1vh;
+	--default-shadow: 4px 4px 13px -3px rgba(0, 0, 0, 0.75);
+	--default-border: 1px solid var(--border-gray);
 }
 
+.modal-field {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	margin-bottom: 2vh;
+
+}
+
+.modal-field input,select {
+	width: 100%;
+	height: 2vw;
+	border: var(--default-border);
+	border-radius: var(--default-radius);
+	margin-top: 1vh;
+	padding: 0 1vh;
+	font-size: 1.5vh;
+}
+
+.card-container {
+	background-color: var(--color5);
+	height: 100%;
+	width: 100%;
+
+
+	border-radius: var(--default-radius);
+	padding: 1vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	position: relative;
+	box-shadow: var(--default-shadow);
+}
+
+.card-container .delete-button {
+	background-color: var(--color-danger);
+}
+
+body select {
+	border: var(--default-border);
+}

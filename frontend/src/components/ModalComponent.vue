@@ -59,7 +59,7 @@ const emits = defineEmits(["onClose", "onSubmit"])
     min-height: 50vh;
     max-height: 90vh;
     min-width: 50%;
-    background-color: var(--color6);
+    background-color: var(--color5);
     padding: 1vh;
     border-radius: var(--default-radius);
     display: flex;
@@ -86,7 +86,7 @@ const emits = defineEmits(["onClose", "onSubmit"])
     margin-left: 1vh;
     min-width: 7vw;
     font-size: 2vh;
-    background-color: var(--color3);
+    background-color: var(--color2);
 }
 
 .modal-title-container{

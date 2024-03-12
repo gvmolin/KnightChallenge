@@ -1,5 +1,5 @@
 <template>
-    <div class="knight-card-container" >
+    <div class="card-container" >
         <div class="knight-card-controls">
             <button class="view-button" @click="isDetailed = true">
                 <EyeIcon />
@@ -103,23 +103,7 @@ function formatDateYYYYmmdd(input: string|Date) {
 </script>
 
 <style scoped>
-    .knight-card-container{
-        background-color: var(--color6);
-        height: 100%; 
-        width: 100%;
-        
-
-        border-radius: var(--default-radius);
-        padding: 1vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        position: relative;
-        box-shadow: var(--default-shadow);
-    }
-
-    .knight-card-container button{
+    .card-container button{
         border: none;
         width: 3vw;
         height: 3vw;
@@ -128,11 +112,15 @@ function formatDateYYYYmmdd(input: string|Date) {
         background-color: var(--color3);
         z-index: 7;
     }
-    .knight-card-container button:hover{
+    .card-container button:hover{
         cursor: pointer;
     }
 
-    .knight-card-container hr{
+    .card-container .delete-button {
+        background-color: var(--color-danger);
+    }
+
+    .card-container hr{
         width: 100%;
         margin: 1vh 0;
     }
@@ -141,10 +129,6 @@ function formatDateYYYYmmdd(input: string|Date) {
         width: 100%;
         display: flex;
         justify-content: flex-end;
-    }
-
-    .knight-card-container .delete-button {
-        background-color: var(--color-danger);
     }
 
     .knight-card-info{
@@ -158,6 +142,7 @@ function formatDateYYYYmmdd(input: string|Date) {
         background-color: white;
         border-radius: var(--default-radius);
         margin-bottom: 1vh;
+        border: var(--default-border);
     }
 
     .knight-img img{
@@ -183,12 +168,8 @@ function formatDateYYYYmmdd(input: string|Date) {
         top: 0;
         border-radius: var(--default-radius);
         padding: 1vh;
-        /* padding-right: calc(1vh - var(--scrollbar-width)); */
         display: none;
         color: black;
-
-        
-
         transition: 1s linear;
 
     }
