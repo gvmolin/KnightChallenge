@@ -15,7 +15,6 @@
             </div>
             <div class="knight-card-info"><h2>Name: &nbsp;</h2> <h2>{{ props.knight.name }}</h2></div>
             <div class="knight-card-info"><h2>Nickname: &nbsp;</h2> <h2>{{ props.knight.nickname }}</h2></div>
-            <!-- <div class="knight-card-info"><h2>Nickname:</h2> <h2>{{ props.knight.attributes }}</h2></div> -->
         </div>
 
         <div :class="`info-section ${!!isDetailed && 'info-on'}`">
@@ -36,6 +35,7 @@
                 <div class="knight-card-info"><h3>Name: &nbsp;</h3> <h3>{{ props.knight.name }}</h3></div>
                 <div class="knight-card-info"><h3>Nickname: &nbsp;</h3> <h3>{{ props.knight.nickname }}</h3></div>
                 <div class="knight-card-info"><h3>Birthday: &nbsp;</h3> <h3>{{ formatDateYYYYmmdd(props.knight.birthday) }}</h3></div>
+                <div class="knight-card-info"><h3>Age: &nbsp;</h3> <h3>{{ getAge(props.knight.birthday) }}</h3></div>
                 <hr>
                 <div class="knight-card-info"><h2>Attributes</h2></div>
                 <div class="knight-card-info" v-for="[key, value] in Object.entries(props.knight.attributes)"><h3>{{key}}: &nbsp;</h3> <h3>{{ value }}</h3></div>
@@ -99,7 +99,22 @@ function formatDateYYYYmmdd(input: string|Date) {
     return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate() + 1}`
 }
 
+function getAge(birthday:string|Date){
+    const now = new Date();
+    const birthdayDate =  new Date(birthday);
+    let age = now.getFullYear() - birthdayDate.getFullYear();
 
+    if (
+        now.getMonth() < birthdayDate.getMonth() ||
+        (now.getMonth() === birthdayDate.getMonth() &&
+        now.getDate() < birthdayDate.getDate())
+    ) {
+        age--;
+    }
+
+    return age;
+
+}
 </script>
 
 <style scoped>
