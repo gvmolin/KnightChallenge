@@ -25,11 +25,17 @@ export const attributeSet = {
     "charisma": 0, 
 }
 
-export function getAttributesArray(): string[]{
-    const validAttr:string[] = [];
+export function getAttributesArray(): attributesEnum[] {
+    const validAttr: attributesEnum[] = [];
     Object.keys(attributesEnum).forEach((value: string) => {
-        if(Object.values(attributesEnum).includes(value) )validAttr.push(value);
-    })
+        const enumValue = attributesEnum[value as keyof typeof attributesEnum];
+        console.log(enumValue, Number.isNaN(Number.parseInt(`${enumValue}`)), Number.parseInt(`${enumValue}`));
+        
+
+        if (enumValue !== undefined && Number.isNaN(Number.parseInt(`${enumValue}`))) {
+            validAttr.push(enumValue);
+        }
+    });
 
     return validAttr;
 }
