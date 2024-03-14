@@ -76,3 +76,12 @@
 body select {
 	border: var(--default-border);
 }
+
+.default-button {
+    border: none;
+    height: 3vw;
+    margin-left:1vh;
+    border-radius: var(--default-radius);
+    background-color: var(--color3);
+    z-index: 7;
+}

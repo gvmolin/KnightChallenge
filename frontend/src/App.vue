@@ -1,11 +1,15 @@
 <template>
-  <default-layout>
+  <default-layout v-if="route.name !== 'Login'">
     <router-view/>
   </default-layout>
+
+  <router-view v-else></router-view>
 </template>
 
 <script setup lang="ts">
+  import { useRoute } from 'vue-router';
   import DefaultLayout from './components/templates/DefaultLayout.vue';
+  const route = useRoute();
 </script>
 
 <style>
